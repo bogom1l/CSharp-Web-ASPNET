@@ -15,8 +15,8 @@
 
         public IActionResult Index()
         {
-            ViewBag.Message = "Hello world az sum gotin";
-            ViewData["Message"] = "Hello world az sum pich";
+            ViewData["Message"] = "hello World az sum gotin";
+            //ViewData["People"] = new[] { "Pesho", "Gosho", "Bogi" };
 
             return View();
         }
@@ -25,6 +25,42 @@
         {
             return View();
         }
+
+        public IActionResult About() // /Home/About
+        {
+            ViewBag.Message = "This is an ASPNET Core MVP App.";
+
+            return View();
+        }
+
+        public IActionResult Numbers() // /Home/Numbers
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult NumbersToN() // /Home/NumbersToN
+        {
+            ViewData["Count"] = -1;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult NumbersToN(int count = -1) // /Home/NumbersToN
+        {
+            ViewData["Count"] = count;
+            
+            return this.View();
+        }
+
+
+
+
+
+
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
