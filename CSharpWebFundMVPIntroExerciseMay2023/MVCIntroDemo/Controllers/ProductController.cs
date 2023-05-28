@@ -78,8 +78,7 @@ namespace MVCIntroDemo.Controllers
             }
 
             Response.Headers.Add(HeaderNames.ContentDisposition, @"attachment;filename=products.txt");
-            //Response.Headers.Add(HeaderNames.ContentDisposition, @"filename=products.txt");
-
+            //Response.Headers.Add(HeaderNames.ContentDisposition, @"filename=products.txt"); //bez da se otwarq w browsera awtomat
 
             return File(Encoding.UTF8.GetBytes(sb.ToString().TrimEnd()), "text/plain");
         }
