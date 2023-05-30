@@ -1,50 +1,51 @@
-﻿namespace TextSplitterApp.Controllers
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using TextSplitterApp.Models;
+
+namespace TextSplitterApp.Controllers;
+
+public class HomeController : Controller
 {
-    using Microsoft.AspNetCore.Mvc;
-    using System.Diagnostics;
-    using TextSplitterApp.Models;
+    private readonly ILogger<HomeController> _logger;
 
-    public class HomeController : Controller
+    public HomeController(ILogger<HomeController> logger)
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        _logger = logger;
+    }
 
 
 
 
-        public IActionResult Index(TextViewModel model)
-        {
-            return View(model);
-        }
 
-        [HttpPost]
-        public IActionResult Split(TextViewModel model)
-        {
-            var splitTextArray = model.Text
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                .ToArray();
+    public IActionResult Index(TextViewModel model)
+    {
+        return View(model);
+    }
 
-            model.SplitText = string.Join(Environment.NewLine, splitTextArray);
+    [HttpPost]
+    public IActionResult Split(TextViewModel model)
+    {
+        var splitTextArray = model.Text
+            .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            .ToArray();
 
-            return RedirectToAction("Index", model);
-        }
+        model.SplitText = string.Join(Environment.NewLine, splitTextArray);
+
+        return RedirectToAction("Index", model);
+    }
 
 
 
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
