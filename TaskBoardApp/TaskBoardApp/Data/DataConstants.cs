@@ -1,6 +1,6 @@
 ﻿namespace TaskBoardApp.Data
 {
-    public class DataConstants
+    public class DataConstants //static
     {
         public class Task
         {
