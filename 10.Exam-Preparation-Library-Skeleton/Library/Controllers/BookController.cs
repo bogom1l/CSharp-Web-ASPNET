@@ -59,7 +59,7 @@ namespace Library.Controllers
 
             await _bookService.RemoveBookByIdAsync(userId, book);
 
-            return RedirectToAction("All");
+            return RedirectToAction("Mine");
 
         }
 
@@ -76,7 +76,7 @@ namespace Library.Controllers
 
             return View(bookViewModel);
         }
-
+        
 
          
         [HttpPost]
@@ -91,6 +91,9 @@ namespace Library.Controllers
 
             return RedirectToAction("All", "Book");
         }
+
+        
+        
 
     }
 

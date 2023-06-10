@@ -84,11 +84,15 @@ namespace Library.Services
 
         public async Task RemoveBookByIdAsync(string userId, BookViewModel book)
         {
+
             var bookToRemove = _context.IdentityUserBooks
                 .FirstOrDefault(ub => ub.CollectorId == userId && ub.BookId == book.Id);
 
-            _context.IdentityUserBooks.Remove(bookToRemove);
-            await _context.SaveChangesAsync();
+            if (bookToRemove != null)
+            {
+                _context.IdentityUserBooks.Remove(bookToRemove);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<ICollection<CategoryViewModel>> GetCategories()
