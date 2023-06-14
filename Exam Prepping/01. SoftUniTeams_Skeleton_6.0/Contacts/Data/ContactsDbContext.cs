@@ -10,6 +10,8 @@ namespace Contacts.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+        public DbSet<ApplicationUserContact> ApplicationUserContacts { get; set; }
+
         public ContactsDbContext(DbContextOptions<ContactsDbContext> options)
             : base(options)
         {

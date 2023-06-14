@@ -87,6 +87,49 @@ namespace Contacts.Services
             
         }
 
+        public async Task<IEnumerable<ContactViewModel>> GetAllTeamsAsync(string userId)
+        {
+            return await _context.Contacts
+                .Where(au => au.ApplicationUserContacts.Any(v => v.ApplicationUserId == userId))
+                .Select(c => new ContactViewModel
+                {
+                    Id = c.Id,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    PhoneNumber = c.PhoneNumber,
+                    Email = c.Email,
+                    Address = c.Address,
+                    Website = c.Website
+                }).ToListAsync();
+        }
 
+        public async Task AddTeamAsync(int id, string userId)
+        {
+            if (_context.ApplicationUserContacts.Any(au => au.ApplicationUserId == userId && au.ContactId == id))
+            {
+                return;
+            }   
+
+            var contact = new ApplicationUserContact()
+            {
+                ApplicationUserId = userId,
+                ContactId = id
+            };
+
+            await _context.ApplicationUserContacts.AddAsync(contact);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveFromTeamAsync(int id, string userId)
+        {
+            var userContact = await _context.ApplicationUserContacts.FirstOrDefaultAsync(au =>
+                au.ApplicationUserId == userId && au.ContactId == id);
+
+            if(userContact == null)
+                return;
+
+            _context.ApplicationUserContacts.Remove(userContact);
+            await _context.SaveChangesAsync();
+        }
     }
 }

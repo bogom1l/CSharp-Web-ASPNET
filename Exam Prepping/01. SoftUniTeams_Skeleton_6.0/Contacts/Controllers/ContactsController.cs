@@ -6,6 +6,7 @@ namespace Contacts.Controllers
 {
     using Contacts.Data.Models;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
 
     public class ContactsController : Controller
     {
@@ -16,6 +17,12 @@ namespace Contacts.Controllers
         {
             this._context = context;
             this._contactService = contactService;
+        }
+
+
+        public string GetUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
 
@@ -67,5 +74,34 @@ namespace Contacts.Controllers
         }
 
 
+
+        [HttpGet]
+        public async Task<IActionResult> Team()
+        {
+            string userId = GetUserId();
+
+            var teams = await _contactService.GetAllTeamsAsync(userId);
+            return View(teams);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddToTeam(int id)
+        {
+            string userId = GetUserId();
+
+            await _contactService.AddTeamAsync(id, userId);
+
+            return RedirectToAction("Team");
+        }
+
+
+        public async Task<IActionResult> RemoveFromTeam(int id)
+        {
+            string userId = GetUserId();
+
+            await _contactService.RemoveFromTeamAsync(id, userId);
+            return RedirectToAction("Team");
+        }
     }
 }
