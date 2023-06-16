@@ -57,7 +57,7 @@ namespace Library.Controllers
 
             var book = await _bookService.GetBookByIdAsync(bookId);
 
-            if(book == null)
+            if (book == null)
             {
                 return BadRequest("tolkoz mnogo noshti i pak ne si go doizpipal");
             }
@@ -87,14 +87,53 @@ namespace Library.Controllers
             return RedirectToAction("Mine");
         }
 
-        /*
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             int bookId = id;
-            
+
+            AddBookViewModel? bookViewModel = await _bookService.GetBookByIdForEditAsync(bookId);
+
+            if (bookViewModel == null)
+            {
+                return RedirectToAction("All");
+            }
+
+            return View(bookViewModel);
         }
-        */
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, AddBookViewModel bookViewModel)
+        {
+            int bookId = id;
+
+            if (!ModelState.IsValid)
+            {
+                return View(bookViewModel);
+            }
+
+            await _bookService.EditBookAsync(bookId, bookViewModel);
+
+            return RedirectToAction("All");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            int bookId = id;
+
+            BookViewModel? bookViewModel = await _bookService.GetBookByIdAsync(bookId);
+
+            if (bookViewModel == null)
+            {
+                return BadRequest("failed to delete");
+            }
+
+            await _bookService.DeleteBookAsync(bookViewModel);
+
+            return RedirectToAction("All");
+        }
 
     }
 }

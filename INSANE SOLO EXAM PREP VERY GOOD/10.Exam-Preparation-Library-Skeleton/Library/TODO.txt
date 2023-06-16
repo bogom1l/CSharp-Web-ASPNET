@@ -1,2 +1,10 @@
 ﻿
-//TODO: edit, delete, details
+//TODO:
+-Global Constants
+
+- - - - - - - - - - - - - - - - - - 
+~Bonus tasks done:
+
+-Edit
+-Delete
+- - - - - - - - - - - - - - - - - - 

@@ -1,4 +1,5 @@
-﻿using Library.Data;
+﻿using System.Globalization;
+using Library.Data;
 using Library.Data.Models;
 using Library.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -123,9 +124,58 @@ namespace Library.Services
             }
         }
 
+        public async Task<AddBookViewModel?> GetBookByIdForEditAsync(int bookId)
+        {
+            var categoriesViewModels = await _dbContext.Categories
+                .Select(c => new CategoryViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToListAsync();
 
+            AddBookViewModel? bookViewModel = await _dbContext
+                .Books
+                .Where(b => b.Id == bookId)
+                .Select(b => new AddBookViewModel()
+                {
+                    Title = b.Title,
+                    Author = b.Author,
+                    Description = b.Description,
+                    Url = b.ImageUrl,
+                    Rating = b.Rating.ToString(),
+                    CategoryId = b.CategoryId,
+                    Categories = categoriesViewModels
+                }).FirstOrDefaultAsync();
 
+            return bookViewModel;
+        }
 
+        public async Task EditBookAsync(int bookId, AddBookViewModel bookViewModel)
+        {
+            Book? bookToEdit = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == bookId);
 
+            if (bookToEdit != null)
+            {
+                bookToEdit.Title = bookViewModel.Title;
+                bookToEdit.Author = bookViewModel.Author;
+                bookToEdit.Description = bookViewModel.Description;
+                bookToEdit.ImageUrl = bookViewModel.Url;
+                bookToEdit.CategoryId = bookViewModel.CategoryId;
+                bookToEdit.Rating = decimal.Parse(bookViewModel.Rating);
+
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteBookAsync(BookViewModel bookViewModel)
+        {
+            Book? bookToDelete = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == bookViewModel.Id);
+
+            if (bookToDelete != null)
+            {
+                _dbContext.Books.Remove(bookToDelete);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
     }
 }
